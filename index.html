@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#241323">
   <title>Diya Closet — Kurti Catalogue</title>
-  <meta name="description" content="Explore exclusive kurti styles with full garment, neckline, fabric and hem details — Diya Closet.">
+  <meta name="description" content="Explore 50 kurti styles with full garment, neckline, fabric and hem details.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,17 +13,18 @@
     <a class="brand" href="#top" aria-label="Diya Closet home">
       <img class="brand-logo" src="assets/diya-logo.png" alt="Diya Closet">
     </a>
-    <button class="round-button" id="searchToggle" aria-label="Search catalogue">
+    <div class="header-actions"><a class="admin-link" href="admin.html">Admin login</a><button class="round-button" id="searchToggle" aria-label="Search catalogue">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
-    </button>
+    </button></div>
   </header>
 
   <main id="top">
+    <p id="loadMessage" role="status" style="padding:0 6%; position: absolute; z-index: 100; color: white; top: 80px;"></p>
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">KURTI COLLECTION • 2026</p>
         <h1>Made to be<br><em>seen closely.</em></h1>
-        <p class="intro">Explore our exclusive dress collection. Tap any kurti to see the full silhouette, neckline, fabric texture and hem detail.</p>
+        <p class="intro">Explore our kurti collection. Tap any kurti to see the full silhouette, neckline, fabric texture and hem detail—without models.</p>
         <a class="primary-button" href="#collection">Explore the collection <span>↘</span></a>
       </div>
       <div class="hero-art" aria-label="Featured kurti styles">
@@ -31,13 +32,15 @@
         <article class="floating-card card-a"><img src="assets/dc-024.webp" alt="Plum Anarkali kurti"></article>
         <article class="floating-card card-b"><img src="assets/dc-001.webp" alt="Lilac everyday kurti"></article>
         <article class="floating-card card-c"><img src="assets/dc-042.webp" alt="Indigo printed kurti"></article>
-
+        <span class="hero-stamp"><span id="heroCount">50</span><br><small>STYLES</small></span>
       </div>
     </section>
 
+    <section id="nextStall" hidden></section>
+
     <section class="collection-shell" id="collection">
       <div class="section-heading">
-        <div><p class="eyebrow">THE CURATED EDIT</p><h2>Find your detail.</h2></div>
+        <div><p class="eyebrow">THE CURATED EDIT</p><h2>Your collection.</h2></div>
         <p>Every tile opens into an editorial product story.</p>
       </div>
 
@@ -49,14 +52,6 @@
         </div>
       </div>
 
-      <nav class="filters" aria-label="Catalogue categories">
-        <button class="filter active" data-filter="All">All styles</button>
-        <button class="filter" data-filter="Everyday Cotton">Everyday</button>
-        <button class="filter" data-filter="Festive Edit">Festive</button>
-        <button class="filter" data-filter="Workwear Minimal">Workwear</button>
-        <button class="filter" data-filter="Anarkali Stories">Anarkali</button>
-        <button class="filter" data-filter="Casual Prints">Casual</button>
-      </nav>
 
       <div class="results-line"><span id="resultCount">50 styles</span><span>Tap to view fabric details</span></div>
       <div class="product-grid" id="productGrid"></div>
@@ -71,8 +66,8 @@
 
   <footer>
     <div class="brand footer-brand"><img class="brand-logo" src="assets/diya-logo.png" alt="Diya Closet"></div>
-    <p>@diyaclosetofficial</p>
-    <p class="demo-note">© 2026 Diya Closet • All rights reserved</p>
+    <p>diyaclosetofficial</p>
+    <p class="demo-note">Interactive demo catalogue • Sample products and prices</p>
   </footer>
 
   <dialog class="product-dialog" id="productDialog">
@@ -99,14 +94,14 @@
         <div class="detail-price" id="detailPrice"></div>
         <dl>
           <div><dt>Fabric</dt><dd id="detailFabric"></dd></div>
-          <div><dt>Sizes</dt><dd>S · M · L · XL · XXL</dd></div>
+          <div><dt>Sizes</dt><dd id="detailSizes"></dd></div>
           <div><dt>View</dt><dd>Dress-only front view</dd></div>
         </dl>
         <div class="detail-callout"><span>✦</span><p>Use the three close-ups to inspect the neckline, centre print and hem before choosing.</p></div>
-        <p class="sample-note">Stock and pricing may vary</p>
+        <p class="sample-note">Contact Diya Closet for enquiries.</p>
       </div>
     </div>
   </dialog>
-  <script src="app.js"></script>
+  <script src="initial-products.js"></script><script src="config.js"></script><script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer src="cloud.js"></script><script src="app.js"></script>
 </body>
 </html>
