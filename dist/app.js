@@ -54,4 +54,5 @@ $('heroCoverflow').addEventListener('touchend',e=>{if(cfTouchStart!==null){const
 
 products=window.DIYA_INITIAL_PRODUCTS||[];render();initCoverflow();
 window.addEventListener('DOMContentLoaded',refresh);
+window.addEventListener('storage',e=>{if(e.key==='diya-catalogue-updated')refresh()});
 window.addEventListener('focus',()=>{if(!$('productDialog').open)refresh()});setInterval(()=>{if(!document.hidden&&!$('productDialog').open)refresh()},30000);refresh();
