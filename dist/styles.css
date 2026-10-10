@@ -59,3 +59,9 @@
 .hero-art .cf-controls button:disabled{opacity:.4;cursor:default}
 .hero-art .cf-empty{color:#d5c9d5;text-align:center;padding-top:150px}
 @media(max-width:760px){.hero-art{height:520px}.hero-art .cf-card{width:236px}.hero-art .cf-details{margin-left:8px}}
+
+/* Header spacing and discreet admin entry */
+.topbar{top:0;height:auto;min-height:112px;padding-top:calc(24px + env(safe-area-inset-top, 0px));padding-bottom:16px;align-items:center}
+.topbar .admin-link{display:grid;place-items:center;width:44px;height:44px;padding:0;border-radius:50%;font:600 20px/1 Georgia,serif;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.45)}
+.topbar .admin-link:focus-visible{outline:2px solid white;outline-offset:4px}
+@media(max-width:700px){.topbar{min-height:100px;padding-top:calc(22px + env(safe-area-inset-top, 0px));padding-bottom:14px}.topbar .admin-link{width:40px;height:40px;font-size:19px}}
