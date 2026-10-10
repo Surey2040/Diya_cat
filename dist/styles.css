@@ -23,3 +23,39 @@
 @media(max-width:850px){ .stall-banner { padding: 16px; } .stall-details { grid-template-columns: 1fr; gap: 10px; } }
 
 @media(max-width:480px){.header-actions{gap:8px}.admin-link{font-size:12px;padding:10px}.brand-logo{max-width:170px}}
+
+/* Featured cards: premium finish, full-card slide and dedicated price row. */
+.hero-art .coverflow{width:min(360px,100%);height:456px;margin:0;display:block;overflow:hidden;isolation:isolate;touch-action:pan-y;transform-style:flat}
+.hero-art .hero-orbit{width:85%;max-width:340px;height:430px;border-radius:50% 50% 8px 8px;border-color:rgba(223,195,146,.28)}
+.hero-art .cf-card{display:none;position:absolute;left:50%;top:15px;width:248px;height:420px;padding:18px 17px 0;transform:translateX(-50%);background:linear-gradient(155deg,#fffaf0,#f0e6db);color:#493054;border:1px solid #d5b984;border-radius:124px 124px 18px 18px;box-shadow:0 26px 36px #21102d55,0 4px 8px #21102d25;overflow:hidden;transition:none;transform-origin:center;will-change:transform}
+.hero-art .cf-card:after{content:'';position:absolute;inset:7px;border:1px solid #b49a6a55;border-radius:117px 117px 12px 12px;pointer-events:none;z-index:4}
+.hero-art .cf-card:nth-child(3n+2){background:linear-gradient(145deg,#fff4e8,#edddd0)}
+.hero-art .cf-card:nth-child(3n){background:linear-gradient(145deg,#f5f8ee,#dce7de)}
+.hero-art .cf-card-top{position:absolute;top:23px;left:42px;right:42px;text-align:center;color:#816848;font-size:8px;letter-spacing:1.8px;z-index:3}
+.hero-art .cf-photo{height:230px;margin:12px 0 14px;overflow:hidden;background:linear-gradient(150deg,#efe3ee,#decedf);border-radius:110px 110px 8px 8px;box-shadow:inset 0 0 0 1px #b4977850}
+.hero-art .cf-card:nth-child(3n+2) .cf-photo{background:linear-gradient(145deg,#f6e6d7,#e7cdbb)}
+.hero-art .cf-card:nth-child(3n) .cf-photo{background:linear-gradient(145deg,#e7eee4,#cddfd4)}
+.hero-art .cf-photo img{display:block;width:100%;height:100%;padding:0;object-fit:contain;transform:scale(1.53);mix-blend-mode:multiply}
+.hero-art .cf-photo img[hidden],.hero-art .cf-missing[hidden]{display:none}
+.hero-art .cf-missing{display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:#765e7c}
+.hero-art .cf-card-copy{display:grid;grid-template-columns:minmax(0,1fr);padding:11px 3px 0;border-top:1px solid #bda47988;text-align:left}
+.hero-art .cf-card-copy p{font:400 8px/1.4 Arial,sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#80678a;margin:0 0 5px;overflow-wrap:anywhere}
+.hero-art .cf-card-copy h3{font:400 22px/1.15 Georgia,serif;letter-spacing:-.5px;min-height:51px;margin:0 0 3px;color:#493054;white-space:normal;overflow-wrap:break-word}
+.hero-art .cf-fabric{font:400 10px/1.5 Arial,sans-serif;color:#7d677d}
+.hero-art .cf-card-copy strong{display:block;justify-self:end;font:400 20px/1.2 Georgia,serif;white-space:nowrap;margin-top:5px;padding-bottom:5px;color:#493054}
+.hero-art .cf-current{display:block;z-index:2}
+.hero-art .cf-enter{display:block;animation:diya-card-enter 1100ms cubic-bezier(.22,.68,.22,1) both}
+.hero-art .cf-exit{display:block;animation:diya-card-exit 1100ms cubic-bezier(.22,.68,.22,1) both;z-index:1}
+.hero-art .cf-enter.cf-reverse{animation-name:diya-card-enter-back}
+.hero-art .cf-exit.cf-reverse{animation-name:diya-card-exit-back}
+@keyframes diya-card-enter{from{transform:translateX(calc(-50% + 350px)) rotate(6deg);opacity:.4}to{transform:translateX(-50%);opacity:1}}
+@keyframes diya-card-exit{from{transform:translateX(-50%);opacity:1}to{transform:translateX(calc(-50% - 350px)) rotate(-6deg);opacity:.4}}
+@keyframes diya-card-enter-back{from{transform:translateX(calc(-50% - 350px)) rotate(-6deg);opacity:.4}to{transform:translateX(-50%);opacity:1}}
+@keyframes diya-card-exit-back{from{transform:translateX(-50%);opacity:1}to{transform:translateX(calc(-50% + 350px)) rotate(6deg);opacity:.4}}
+.hero-art .cf-controls{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:13px;position:relative;z-index:5}
+.hero-art .cf-arrow{width:44px;height:44px;display:grid;place-items:center;background:#f9efdf0c;border:1px solid #d7b88570;border-radius:50%;color:#e8d2a9;font:20px Arial,sans-serif;cursor:pointer}
+.hero-art .cf-arrow:hover{background:#ddbe8725}
+.hero-art .cf-details{display:flex;align-items:center;gap:10px;background:transparent;border:0;border-bottom:1px solid #ddbe8780;color:#ddbe87;font:12px Arial,sans-serif;letter-spacing:.3px;padding:12px 0 9px;margin-left:12px;cursor:pointer;white-space:nowrap}
+.hero-art .cf-controls button:disabled{opacity:.4;cursor:default}
+.hero-art .cf-empty{color:#d5c9d5;text-align:center;padding-top:150px}
+@media(max-width:760px){.hero-art{height:520px}.hero-art .cf-card{width:236px}.hero-art .cf-details{margin-left:8px}}

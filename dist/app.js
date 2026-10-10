@@ -12,7 +12,7 @@ async function refresh(){
  try{
   const data=await window.DiyaCloud.load();
   if(!Array.isArray(data.products))throw Error('Invalid catalogue response');
-  products=data.products;cloudSucceeded=true;render();if(!$('heroCoverflow').innerHTML)initCoverflow();showStall(data.stall);
+  products=data.products;cloudSucceeded=true;render();initCoverflow();showStall(data.stall);
   $('loadMessage').textContent='';
  }catch(e){
   // Keep the last successful collection; never resurrect deleted items after a successful sync.
@@ -23,9 +23,34 @@ async function refresh(){
 $('productGrid').onclick=e=>{const b=e.target.closest('[data-id]');if(b)openProduct(b.dataset.id)};
 $('searchInput').oninput=render;$('searchToggle').onclick=()=>{$('searchPanel').classList.toggle('open');$('searchInput').focus()};$('dialogClose').onclick=closeDialog;$('productDialog').addEventListener('close',()=>document.body.style.overflow='');$('prevProduct').onclick=()=>{if(products.length)openProduct(products[(activeIndex-1+products.length)%products.length].id)};$('nextProduct').onclick=()=>{if(products.length)openProduct(products[(activeIndex+1)%products.length].id)};
 
-let cfPos=0,cfTimer;
-function initCoverflow(){const c=$('heroCoverflow');if(!c||!products.length)return;c.innerHTML=products.map(p=>`<article class="cf-card"><img src="${esc(p.image)}" alt="${esc(p.name)}"></article>`).join('');updateCoverflow();clearInterval(cfTimer);cfTimer=setInterval(()=>{if(!document.hidden&&!$('productDialog').open){cfPos=(cfPos+1)%products.length;updateCoverflow()}},3000)}
-function updateCoverflow(){const cards=document.querySelectorAll('.cf-card'),count=cards.length;if(!count)return;cards.forEach((card,i)=>{const depth=(i-cfPos+count)%count;card.style.transformOrigin="85% 85%";if(depth>3&&depth!==count-1){card.style.opacity=0;card.style.transform='scale(0.8) rotateZ(15deg)';card.style.pointerEvents='none';card.style.zIndex=0}else if(depth===count-1){card.style.opacity=0;card.style.transform='translate(150px, -50px) rotateZ(15deg)';card.style.pointerEvents='none';card.style.zIndex=101}else{const scale=1-depth*0.04,rotateZ=depth*5;card.style.opacity=1;card.style.transform=`scale(${scale}) rotateZ(${rotateZ}deg)`;card.style.pointerEvents=depth===0?'auto':'none';card.style.zIndex=100-depth}});const p=products[cfPos];if(p){const cap=document.querySelector('.coverflow-caption');if(cap){cap.style.opacity=0;setTimeout(()=>{if($('cfName')){navigator.maxTouchPoints?null:null;$('cfName').textContent=p.name;$('cfMeta').textContent=p.fabric+' • '+p.category;$('cfPrice').textContent=money(p.price);cap.style.opacity=1}},300)}}}
+let cfPos=0,cfTimer,cfFinishTimer,cfBusy=false;
+function initCoverflow(){
+ const c=$('heroCoverflow');if(!c)return;
+ const previousId=c.querySelector('.cf-current')?.dataset.id;
+ clearInterval(cfTimer);clearTimeout(cfFinishTimer);cfBusy=false;
+ const retained=products.findIndex(p=>String(p.id)===previousId);cfPos=retained>=0?retained:0;
+ c.innerHTML=products.map((p,i)=>`<article class="cf-card ${i===cfPos?'cf-current':''}" data-id="${esc(p.id)}" aria-hidden="${i!==cfPos}"><div class="cf-card-top"><span>${esc(p.code)}</span></div><div class="cf-photo"><img src="${esc(p.image)}" alt="${esc(p.name)}" ${i>2?'loading="lazy"':''}><span class="cf-missing" hidden>Photo unavailable</span></div><div class="cf-card-copy"><p>${esc(p.category)}</p><h3>${esc(p.name)}</h3><span class="cf-fabric">${esc(p.fabric)}</span><strong>${money(p.price)}</strong></div></article>`).join('');
+ c.querySelectorAll('img').forEach(img=>{img.addEventListener('error',()=>{img.hidden=true;img.nextElementSibling.hidden=false});if(img.complete&&!img.naturalWidth){img.hidden=true;img.nextElementSibling.hidden=false}});
+ if(!products.length)c.innerHTML='<p class="cf-empty">Our next collection is coming soon.</p>';
+ ['cfPrev','cfNext','cfDetails'].forEach(id=>{if($(id))$(id).disabled=!products.length});
+ cfTimer=setInterval(()=>{if(!$('productDialog').open)moveCoverflow(1)},2000);
+}
+function moveCoverflow(direction){
+ if(cfBusy||products.length<2)return;
+ const cards=$('heroCoverflow').querySelectorAll('.cf-card');if(cards.length!==products.length)return;
+ const old=cards[cfPos];cfPos=(cfPos+direction+products.length)%products.length;
+ const incoming=cards[cfPos],reverse=direction<0?' cf-reverse':'';cfBusy=true;
+ old.className='cf-card cf-exit'+reverse;old.setAttribute('aria-hidden','true');
+ incoming.className='cf-card cf-current cf-enter'+reverse;incoming.setAttribute('aria-hidden','false');
+ const img=incoming.querySelector('img');if(img)img.loading='eager';
+ clearTimeout(cfFinishTimer);cfFinishTimer=setTimeout(()=>{old.className='cf-card';incoming.className='cf-card cf-current';cfBusy=false},1100);
+}
+$('cfPrev').onclick=()=>moveCoverflow(-1);
+$('cfNext').onclick=()=>moveCoverflow(1);
+$('cfDetails').onclick=()=>{if(products[cfPos])openProduct(products[cfPos].id)};
+let cfTouchStart=null;
+$('heroCoverflow').addEventListener('touchstart',e=>{cfTouchStart=e.touches[0].clientX},{passive:true});
+$('heroCoverflow').addEventListener('touchend',e=>{if(cfTouchStart!==null){const delta=e.changedTouches[0].clientX-cfTouchStart;if(Math.abs(delta)>40)moveCoverflow(delta<0?1:-1);cfTouchStart=null}},{passive:true});
 
 products=window.DIYA_INITIAL_PRODUCTS||[];render();initCoverflow();
 window.addEventListener('DOMContentLoaded',refresh);
