@@ -12,7 +12,7 @@ async function refresh(){
  try{
   const data=await window.DiyaCloud.load();
   if(!Array.isArray(data.products))throw Error('Invalid catalogue response');
-  products=data.products;cloudSucceeded=true;render();showStall(data.stall);
+  products=data.products;cloudSucceeded=true;render();initCoverflow();showStall(data.stall);
   $('loadMessage').textContent='';
  }catch(e){
   // Keep the last successful collection; never resurrect deleted items after a successful sync.
@@ -22,38 +22,11 @@ async function refresh(){
 }
 $('productGrid').onclick=e=>{const b=e.target.closest('[data-id]');if(b)openProduct(b.dataset.id)};
 $('searchInput').oninput=render;$('searchToggle').onclick=()=>{$('searchPanel').classList.toggle('open');$('searchInput').focus()};$('dialogClose').onclick=closeDialog;$('productDialog').addEventListener('close',()=>document.body.style.overflow='');$('prevProduct').onclick=()=>{if(products.length)openProduct(products[(activeIndex-1+products.length)%products.length].id)};$('nextProduct').onclick=()=>{if(products.length)openProduct(products[(activeIndex+1)%products.length].id)};
-let heroCycleTimer;
-function startHeroCycle() {
-  if (products.length < 3) return;
-  clearInterval(heroCycleTimer);
-  const cards = document.querySelectorAll('.floating-card img');
-  if (!cards.length) return;
-  let currentIndices = [0, 1, Math.min(2, products.length-1)];
-  
-  cards.forEach((img, i) => {
-    if(products[currentIndices[i]]) {
-      img.src = products[currentIndices[i]].image;
-      img.alt = products[currentIndices[i]].name;
-    }
-  });
 
-  heroCycleTimer = setInterval(() => {
-    if (document.hidden) return;
-    const cardIdx = Math.floor(Math.random() * cards.length);
-    const img = cards[cardIdx];
-    img.style.opacity = '0';
-    setTimeout(() => {
-      let newIdx;
-      do { newIdx = Math.floor(Math.random() * products.length); } 
-      while(currentIndices.includes(newIdx));
-      currentIndices[cardIdx] = newIdx;
-      img.src = products[newIdx].image;
-      img.alt = products[newIdx].name;
-      img.style.opacity = '1';
-    }, 800);
-  }, 2500);
-}
+let cfPos=0,cfTimer;
+function initCoverflow(){const c=$('heroCoverflow');if(!c||!products.length)return;c.innerHTML=products.map(p=>`<article class="cf-card"><img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)}"></article>`).join('');updateCoverflow();clearInterval(cfTimer);cfTimer=setInterval(()=>{if(!document.hidden&&!$('productDialog').open){cfPos=(cfPos+1)%products.length;updateCoverflow()}},3000)}
+function updateCoverflow(){const cards=document.querySelectorAll('.cf-card'),count=cards.length;if(!count)return;cards.forEach((card,i)=>{let offset=i-cfPos;if(offset>count/2)offset-=count;else if(offset<-count/2)offset+=count;const d=Math.abs(offset);if(d>3){card.style.opacity=0;card.style.transform=\`translateX(\${Math.sign(offset)*400}px) translateZ(-400px)\`;card.style.pointerEvents='none';card.style.zIndex=0}else{const sign=Math.sign(offset),ramp=Math.pow(d,0.65),tilt=Math.min(48*ramp,80)*sign;card.style.opacity=1-(d*0.15);card.style.transform=\`translateX(\${offset*125}px) translateZ(\${-160*ramp}px) rotateY(\${-tilt}deg)\`;card.style.zIndex=100-Math.round(d);card.style.pointerEvents=d===0?'auto':'none'}});const p=products[cfPos];if(p){const cap=document.querySelector('.coverflow-caption');if(cap){cap.style.opacity=0;setTimeout(()=>{if($('cfName')){navigator.maxTouchPoints?null:null;$('cfName').textContent=p.name;$('cfMeta').textContent=p.fabric+' • '+p.category;$('cfPrice').textContent=money(p.price);cap.style.opacity=1}},300)}}}
 
-products=window.DIYA_INITIAL_PRODUCTS||[];render();startHeroCycle();
+products=window.DIYA_INITIAL_PRODUCTS||[];render();initCoverflow();
 window.addEventListener('DOMContentLoaded',refresh);
 window.addEventListener('focus',()=>{if(!$('productDialog').open)refresh()});setInterval(()=>{if(!document.hidden&&!$('productDialog').open)refresh()},30000);refresh();
