@@ -1,0 +1,4 @@
+window.DIYA_CONFIG = {
+  supabaseUrl: 'https://bcvhxifvjtuvnhjfuint.supabase.co',
+  supabasePublishableKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjdmh4aWZ2anR1dm5oamZ1aW50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1OTg3MDYsImV4cCI6MjEwNzE3NDcwNn0.8lS3fKlTuE2fcA9NuUlGBPxXTQlPalRJmk3nuC872Mw'
+};
